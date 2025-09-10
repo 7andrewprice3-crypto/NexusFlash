@@ -1,1 +1,3 @@
-
+Write-Host "Running Example Module..."
+Start-Sleep -Seconds 2
+Write-Host "Flash complete. (simulated)"
