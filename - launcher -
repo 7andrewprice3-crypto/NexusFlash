@@ -1,1 +1,5 @@
-
+Write-Host "Launching NexusFlash Ultra Royale..."
+Start-Sleep -Seconds 1
+Write-Host "Detecting device... (simulated)"
+Start-Sleep -Seconds 2
+Write-Host "Ready to flash. (This is a placeholder)"
