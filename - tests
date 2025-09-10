@@ -1,1 +1,3 @@
-
+Write-Host "Testing launcher..."
+.\launcher\start.ps1
+Write-Host "Test complete."
