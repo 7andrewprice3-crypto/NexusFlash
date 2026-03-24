@@ -1,0 +1,30 @@
+name: Unity License Activation 🔑
+
+on:
+  workflow_dispatch:
+
+# Required so game-ci transitive deps keep working after GitHub forces Node.js 24 (June 2026).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  activation:
+    name: Generate Activation File
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      # Pinned to v2.1.0 — the last release that generates a .alf file before
+      # the deliberate deprecation-break introduced in v2.2.0.
+      - name: Request Activation File
+        id: getManualLicenseFile
+        uses: game-ci/unity-request-activation-file@v2.1.0
+        with:
+          unityVersion: 2022.3.10f1
+
+      - name: Expose as artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Manual Activation File
+          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
