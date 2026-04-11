@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusFlash — Smartwatch Emulator</title>
+  <link rel="stylesheet" href="watch.css" />
+</head>
+<body>
+
+<!-- ── Device Shell ───────────────────────────────────────── -->
+<div class="device">
+
+  <!-- Crown buttons -->
+  <div class="crown"       id="crown-up" title="Previous screen"></div>
+  <div class="crown-lower" id="crown-dn" title="Next screen"></div>
+
+  <!-- Bezel → Tick ring → Screen -->
+  <div class="bezel">
+    <div class="ticks-ring">
+
+      <!-- SVG tick marks -->
+      <svg class="tick-svg" viewBox="0 0 320 320">
+        <g id="ticks"></g>
+      </svg>
+
+      <!-- Interactive screen -->
+      <div class="screen" id="screen">
+
+        <!-- ══════════════════════════════════════════
+             PAGE 0 — HOME FACE
+        ══════════════════════════════════════════ -->
+        <div class="page face active" id="pg-home">
+
+          <!-- Background arc tracks -->
+          <svg class="arc-svg" viewBox="0 0 320 320">
+            <!-- Track backgrounds -->
+            <path id="arc-hr-bg"    fill="none" stroke="#1e0a0a" stroke-width="5"
+              d="M 64 160 A 96 96 0 1 1 256 160" />
+            <path id="arc-steps-bg" fill="none" stroke="#0a1020" stroke-width="5"
+              d="M 64 160 A 96 96 0 1 1 256 160" />
+            <!-- Live arcs -->
+            <path id="arc-hr"    fill="none" stroke="#e8303a" stroke-width="5"
+              stroke-linecap="round" opacity="0.9" />
+            <path id="arc-steps" fill="none" stroke="#3a8ee8" stroke-width="3"
+              stroke-linecap="round" opacity="0.7" />
+            <path id="arc-cal"   fill="none" stroke="#f5a623" stroke-width="2"
+              stroke-linecap="round" opacity="0.6" />
+          </svg>
+
+          <!-- Cardinal numbers -->
+          <span class="cardinal top">12</span>
+          <span class="cardinal right">3</span>
+          <span class="cardinal bottom">6</span>
+          <span class="cardinal left">9</span>
+
+          <!-- UV (top-left zone) -->
+          <div class="stat uv">
+            <span class="stat-value" id="uv-val">5.2</span>
+            <span class="stat-label">UV</span>
+          </div>
+
+          <!-- Battery (top-right zone) -->
+          <div class="stat battery">
+            <span class="stat-value" id="bat-val">84%</span>
+            <span class="stat-label">BAT</span>
+          </div>
+
+          <!-- Calories (left) -->
+          <div class="stat calories">
+            <span class="stat-value" id="cal-val">312</span>
+            <span class="stat-label">CAL</span>
+          </div>
+
+          <!-- Heart rate (right) -->
+          <div class="stat heartrate">
+            <span class="stat-value" id="hr-val">72</span>
+            <span class="stat-label">BPM</span>
+          </div>
+
+          <!-- Center: time + icon + steps -->
+          <div class="center">
+            <div class="time-display" id="time">--:--</div>
+            <div class="date-display" id="date">--- -- ---</div>
+
+            <!-- Running icon SVG -->
+            <svg class="run-icon" viewBox="0 0 32 32" fill="none">
+              <!-- Head -->
+              <circle cx="21" cy="5" r="2.5" fill="#e8303a"/>
+              <!-- Body -->
+              <path d="M20 8 L17 16 L13 21" stroke="#e8303a" stroke-width="2"
+                stroke-linecap="round"/>
+              <!-- Arms -->
+              <path d="M18 12 L24 10 M17 14 L12 13" stroke="#e8303a" stroke-width="2"
+                stroke-linecap="round"/>
+              <!-- Legs -->
+              <path d="M17 16 L20 23 L23 27 M15 19 L11 24 L9 28"
+                stroke="#e8303a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- Steps (bottom) -->
+          <div class="stat steps">
+            <span class="stat-value" id="step-val">6.2k</span>
+            <span class="stat-label">STEPS</span>
+          </div>
+
+        </div><!-- /home -->
+
+
+        <!-- ══════════════════════════════════════════
+             PAGE 1 — HEART RATE
+        ══════════════════════════════════════════ -->
+        <div class="page" id="pg-heartrate">
+          <div class="page-title">Heart Rate</div>
+
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52" />
+              <circle class="ring-fg" id="ring-fg" cx="60" cy="60" r="52"
+                stroke-dasharray="326.7" stroke-dashoffset="120" />
+            </svg>
+            <div class="ring-center">
+              <div class="big" id="ring-big">72</div>
+              <div class="small">BPM</div>
+            </div>
+          </div>
+
+          <div class="pulse-dot"></div>
+
+          <div class="page-value" style="font-size:18px;color:var(--text-dim)">
+            Current: <span id="page-hr" style="color:var(--text)">72</span> bpm
+          </div>
+          <div class="page-unit">LIVE MONITORING</div>
+        </div><!-- /heartrate -->
+
+
+        <!-- ══════════════════════════════════════════
+             PAGE 2 — STEPS
+        ══════════════════════════════════════════ -->
+        <div class="page" id="pg-steps">
+          <div class="page-title">Steps Today</div>
+
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52" />
+              <circle class="ring-fg" id="steps-ring-fg" cx="60" cy="60" r="52"
+                stroke="#3a8ee8"
+                stroke-dasharray="326.7" stroke-dashoffset="200" />
+            </svg>
+            <div class="ring-center">
+              <div class="big" id="steps-ring-big" style="font-size:22px">6.2k</div>
+              <div class="small">/ 10k</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:24px;margin-top:4px">
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">CAL</div>
+              <div style="font-size:16px;font-weight:700" id="steps-cal">312</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">KM</div>
+              <div style="font-size:16px;font-weight:700" id="steps-km">4.8</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">MIN</div>
+              <div style="font-size:16px;font-weight:700">52</div>
+            </div>
+          </div>
+        </div><!-- /steps -->
+
+
+        <!-- ══════════════════════════════════════════
+             PAGE 3 — NOTIFICATIONS
+        ══════════════════════════════════════════ -->
+        <div class="page" id="pg-notifications">
+          <div class="page-title" style="margin-bottom:6px">Notifications</div>
+          <div class="notif-list">
+
+            <div class="notif-item">
+              <div class="notif-app">Messages</div>
+              <div class="notif-text">Hey, are you coming tonight?</div>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-app">NexusFlash</div>
+              <div class="notif-text">Device repair complete ✓</div>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-app">Health</div>
+              <div class="notif-text">Time to stand up and move!</div>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-app">Gmail</div>
+              <div class="notif-text">Your order has been shipped.</div>
+            </div>
+
+          </div>
+        </div><!-- /notifications -->
+
+
+        <!-- ══════════════════════════════════════════
+             PAGE 4 — SETTINGS
+        ══════════════════════════════════════════ -->
+        <div class="page" id="pg-settings">
+          <div class="page-title" style="margin-bottom:8px">Settings</div>
+          <div class="settings-list">
+
+            <div class="setting-row">
+              <span class="label">Brightness</span>
+              <span class="val">High</span>
+            </div>
+
+            <div class="setting-row">
+              <span class="label">Do Not Disturb</span>
+              <div class="toggle off" id="toggle-dnd"></div>
+            </div>
+
+            <div class="setting-row">
+              <span class="label">Wrist Detect</span>
+              <div class="toggle" id="toggle-wrist"></div>
+            </div>
+
+            <div class="setting-row">
+              <span class="label">Bluetooth</span>
+              <span class="val" style="color:#4caf50">ON</span>
+            </div>
+
+            <div class="setting-row">
+              <span class="label">Firmware</span>
+              <span class="val">v3.1.2</span>
+            </div>
+
+          </div>
+        </div><!-- /settings -->
+
+      </div><!-- /screen -->
+    </div><!-- /ticks-ring -->
+  </div><!-- /bezel -->
+
+  <!-- Nav dots -->
+  <div class="nav-dots">
+    <div class="dot active" data-page="0"></div>
+    <div class="dot"        data-page="1"></div>
+    <div class="dot"        data-page="2"></div>
+    <div class="dot"        data-page="3"></div>
+    <div class="dot"        data-page="4"></div>
+  </div>
+
+</div><!-- /device -->
+
+<!-- Info bar -->
+<div class="info-bar swipe-hint">
+  <span>Tap watch face</span> or use side crown to navigate &nbsp;·&nbsp;
+  <span>OnePlus Watch 3</span> Obsidian Titanium Simulator
+</div>
+
+<!-- Tick-mark generator (inline so it runs before JS) -->
+<script>
+(function () {
+  const g = document.getElementById('ticks');
+  const cx = 160, cy = 160, r = 145;
+  for (let i = 0; i < 60; i++) {
+    const angle = (i * 6 - 90) * Math.PI / 180;
+    const isHour = i % 5 === 0;
+    const len  = isHour ? 10 : 5;
+    const sw   = isHour ? 2  : 1;
+    const x1 = cx + r * Math.cos(angle);
+    const y1 = cy + r * Math.sin(angle);
+    const x2 = cx + (r - len) * Math.cos(angle);
+    const y2 = cy + (r - len) * Math.sin(angle);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.setAttribute('stroke', isHour ? '#e8303a' : '#3a3a3a');
+    line.setAttribute('stroke-width', sw);
+    line.setAttribute('stroke-linecap', 'round');
+    g.appendChild(line);
+  }
+})();
+</script>
+
+<script src="watch.js"></script>
+</body>
+</html>
