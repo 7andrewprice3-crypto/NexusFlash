@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusFlash — Smartwatch Emulator</title>
+  <link rel="stylesheet" href="watch.css" />
+</head>
+<body>
+
+<div class="device">
+
+  <!-- Side crown buttons -->
+  <div class="btn-crown upper" id="crown-up" title="Previous"></div>
+  <div class="btn-crown lower" id="crown-dn" title="Next"></div>
+
+  <!-- Outer bezel -->
+  <div class="bezel">
+
+    <!-- Tick marks ring -->
+    <svg class="tick-svg" viewBox="0 0 340 340" id="tick-svg"></svg>
+
+    <!-- Screen + dim overlay -->
+    <div class="screen-wrap">
+      <div class="glass-glare"></div>
+      <div class="screen" id="screen">
+
+        <!-- ═══════════════════════════
+             PAGE 0 — HOME FACE
+        ═══════════════════════════ -->
+        <div class="page face active" id="pg-home">
+
+          <!-- Activity rings (3 concentric) -->
+          <svg class="rings-svg" viewBox="0 0 320 320">
+            <!-- Track rings (dim) -->
+            <circle class="ring-track" cx="160" cy="160" r="133" />
+            <circle class="ring-track" cx="160" cy="160" r="120" />
+            <circle class="ring-track" cx="160" cy="160" r="107" />
+            <!-- Live progress rings -->
+            <circle id="arc-cal"    class="ring-live cal-ring"    cx="160" cy="160" r="133" transform="rotate(-90 160 160)" />
+            <circle id="arc-steps"  class="ring-live steps-ring"  cx="160" cy="160" r="120" transform="rotate(-90 160 160)" />
+            <circle id="arc-active" class="ring-live active-ring" cx="160" cy="160" r="107" transform="rotate(-90 160 160)" />
+          </svg>
+
+          <!-- Cardinal numbers -->
+          <span class="cardinal top">12</span>
+          <span class="cardinal right">3</span>
+          <span class="cardinal bottom">6</span>
+          <span class="cardinal left">9</span>
+
+          <!-- Floating stats -->
+          <div class="fstat uv">
+            <span class="fv" id="uv-val">5.2</span>
+            <span class="fl">UV</span>
+          </div>
+          <div class="fstat bat">
+            <span class="fv" id="bat-val">84%</span>
+            <span class="fl">BAT</span>
+          </div>
+          <div class="fstat cal">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#e8303a"><path d="M12 2C8 7 5 11 5 15a7 7 0 0 0 14 0c0-4-3-8-7-13z"/></svg>
+            <span class="fv" id="cal-val">312</span>
+            <span class="fl">CAL</span>
+          </div>
+          <div class="fstat hr">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#e8303a"><path d="M12 21C12 21 3 14 3 8a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 6-9 13-9 13z"/></svg>
+            <span class="fv" id="hr-val">72</span>
+            <span class="fl">BPM</span>
+          </div>
+
+          <!-- Center: digital time + date + runner -->
+          <div class="face-center">
+            <div class="time-big" id="time">--:--</div>
+            <div class="date-small" id="date">--- -- ---</div>
+            <!-- Runner figure -->
+            <svg class="runner" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="15.5" cy="3.5" r="1.8" fill="#e8303a"/>
+              <path d="M14 6.5l-2.5 5-3 4" stroke="#e8303a" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M12.5 9.5l3.5-1.5M12 11.5l-3-.5" stroke="#e8303a" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M11.5 11.5l2 5.5 2.5 3.5M10 13.5l-2 4-1.5 3" stroke="#e8303a" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- Steps bottom -->
+          <div class="fstat steps">
+            <span class="fv" id="step-val">6.2k</span>
+            <span class="fl">STEPS</span>
+          </div>
+
+          <!-- Analog clock hands -->
+          <svg class="hands-svg" viewBox="0 0 320 320">
+            <!-- Hour -->
+            <g id="hand-h">
+              <line x1="160" y1="160" x2="160" y2="105"
+                stroke="rgba(255,255,255,0.92)" stroke-width="5" stroke-linecap="round"/>
+              <line x1="160" y1="160" x2="160" y2="176"
+                stroke="rgba(255,255,255,0.4)"  stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <!-- Minute -->
+            <g id="hand-m">
+              <line x1="160" y1="160" x2="160" y2="82"
+                stroke="rgba(255,255,255,0.95)" stroke-width="3" stroke-linecap="round"/>
+              <line x1="160" y1="160" x2="160" y2="180"
+                stroke="rgba(255,255,255,0.3)"  stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <!-- Second -->
+            <g id="hand-s">
+              <line x1="160" y1="160" x2="160" y2="70"
+                stroke="#e8303a" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="160" y1="160" x2="160" y2="185"
+                stroke="#e8303a" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <!-- Center jewel -->
+            <circle cx="160" cy="160" r="5"   fill="#1a1a1a" stroke="white" stroke-width="1.5"/>
+            <circle cx="160" cy="160" r="2.5" fill="#e8303a"/>
+          </svg>
+
+        </div><!-- /home -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 1 — HEART RATE
+        ═══════════════════════════ -->
+        <div class="page" id="pg-heartrate">
+          <div class="pg-title">Heart Rate</div>
+
+          <!-- Scrolling ECG waveform -->
+          <div class="ecg-container">
+            <canvas id="ecg-canvas" width="220" height="72"></canvas>
+          </div>
+
+          <div class="hr-zone-badge" id="hr-zone">Fat Burn</div>
+
+          <div class="large-metric">
+            <span id="hr-big">72</span>
+            <span class="lm-unit">BPM</span>
+          </div>
+
+          <div class="hr-minmax">
+            <div class="mm-item">
+              <div class="mm-label">MIN</div>
+              <div class="mm-val" id="hr-min">58</div>
+            </div>
+            <div class="pulse-ring"></div>
+            <div class="mm-item">
+              <div class="mm-label">MAX</div>
+              <div class="mm-val" id="hr-max">98</div>
+            </div>
+          </div>
+        </div><!-- /heartrate -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 2 — STEPS
+        ═══════════════════════════ -->
+        <div class="page" id="pg-steps">
+          <div class="pg-title">Steps Today</div>
+
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg"     cx="60" cy="60" r="50"/>
+              <circle class="ring-fg blue" id="steps-ring" cx="60" cy="60" r="50"
+                transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="ring-center">
+              <div class="rc-big" id="steps-big">6.2k</div>
+              <div class="rc-small">/ 10k</div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="sr-cell"><div class="sr-val" id="s-km">4.8</div><div class="sr-lbl">KM</div></div>
+            <div class="sr-cell"><div class="sr-val" id="s-cal">312</div><div class="sr-lbl">CAL</div></div>
+            <div class="sr-cell"><div class="sr-val">52</div><div class="sr-lbl">MIN</div></div>
+          </div>
+
+          <!-- Hourly bar chart -->
+          <div class="bar-chart" id="bar-chart"></div>
+        </div><!-- /steps -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 3 — SLEEP
+        ═══════════════════════════ -->
+        <div class="page" id="pg-sleep">
+          <div class="pg-title">Last Night</div>
+
+          <div class="sleep-score-wrap">
+            <svg viewBox="0 0 80 80" width="80" height="80">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#1e1e1e" stroke-width="8"/>
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#7c4dff"
+                stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="213.6" stroke-dashoffset="38" transform="rotate(-90 40 40)"/>
+            </svg>
+            <div class="sleep-score-inner">
+              <div class="ss-num">82</div>
+              <div class="ss-lbl">Good</div>
+            </div>
+          </div>
+
+          <div class="sleep-stages">
+            <div class="stage-row">
+              <span class="stage-lbl">Deep</span>
+              <div class="stage-bar"><div class="stage-fill" style="width:35%;background:#7c4dff"></div></div>
+              <span class="stage-time">1h 24m</span>
+            </div>
+            <div class="stage-row">
+              <span class="stage-lbl">REM</span>
+              <div class="stage-bar"><div class="stage-fill" style="width:25%;background:#3a8ee8"></div></div>
+              <span class="stage-time">1h 02m</span>
+            </div>
+            <div class="stage-row">
+              <span class="stage-lbl">Light</span>
+              <div class="stage-bar"><div class="stage-fill" style="width:55%;background:#4caf50"></div></div>
+              <span class="stage-time">2h 18m</span>
+            </div>
+          </div>
+
+          <div class="sleep-total">Total &nbsp;<b>4h 44m</b></div>
+        </div><!-- /sleep -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 4 — WORKOUT
+        ═══════════════════════════ -->
+        <div class="page" id="pg-workout">
+          <div class="pg-title">Workout</div>
+          <div class="wk-grid">
+
+            <div class="wk-tile" id="wt-run">
+              <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+                <circle cx="15" cy="4" r="1.8" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M13.5 7l-2 5-2.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 10l3.5-1.5M11.5 12l-3-.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M11.5 12l2 5.5 2 3M10 14.5l-2 4-1 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span>Run</span>
+            </div>
+
+            <div class="wk-tile" id="wt-cycle">
+              <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+                <circle cx="5.5" cy="16" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="18.5" cy="16" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M5.5 16l6-9 3.5 3h3.5M11.5 7l1.5-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span>Cycle</span>
+            </div>
+
+            <div class="wk-tile" id="wt-swim">
+              <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+                <path d="M2 17c2.5-2 5-2 7.5 0s5 2 7.5 0 5-2 5 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span>Swim</span>
+            </div>
+
+            <div class="wk-tile" id="wt-hiit">
+              <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+                <path d="M3 12h3l2-7 4 14 2-8 2 3h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>HIIT</span>
+            </div>
+
+          </div>
+          <div class="wk-hint">Tap to start</div>
+
+          <!-- Workout timer (hidden until started) -->
+          <div class="wk-timer" id="wk-timer" style="display:none">
+            <div class="wkt-label" id="wkt-label">Running</div>
+            <div class="wkt-time" id="wkt-time">00:00</div>
+            <button class="wkt-stop" id="wkt-stop">Stop</button>
+          </div>
+        </div><!-- /workout -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 5 — NOTIFICATIONS
+        ═══════════════════════════ -->
+        <div class="page" id="pg-notifications">
+          <div class="pg-title">Notifications</div>
+          <div class="notif-list">
+
+            <div class="notif-item">
+              <div class="ni-dot" style="background:#4caf50"></div>
+              <div class="ni-body">
+                <div class="ni-app">Messages</div>
+                <div class="ni-text">Hey, are you coming tonight?</div>
+                <div class="ni-time">2m ago</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-dot" style="background:#e8303a"></div>
+              <div class="ni-body">
+                <div class="ni-app">NexusFlash</div>
+                <div class="ni-text">Device repair complete ✓</div>
+                <div class="ni-time">8m ago</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-dot" style="background:#3a8ee8"></div>
+              <div class="ni-body">
+                <div class="ni-app">Health</div>
+                <div class="ni-text">Stand up &amp; move!</div>
+                <div class="ni-time">15m ago</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-dot" style="background:#f5a623"></div>
+              <div class="ni-body">
+                <div class="ni-app">Gmail</div>
+                <div class="ni-text">Your order has shipped</div>
+                <div class="ni-time">1h ago</div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /notifications -->
+
+
+        <!-- ═══════════════════════════
+             PAGE 6 — SETTINGS
+        ═══════════════════════════ -->
+        <div class="page" id="pg-settings">
+          <div class="pg-title">Settings</div>
+          <div class="settings-list">
+
+            <div class="setting-row">
+              <span class="s-lbl">Brightness</span>
+              <span class="s-val">High</span>
+            </div>
+            <div class="setting-row">
+              <span class="s-lbl">Do Not Disturb</span>
+              <div class="toggle off" id="toggle-dnd"></div>
+            </div>
+            <div class="setting-row">
+              <span class="s-lbl">Wrist Detect</span>
+              <div class="toggle" id="toggle-wrist"></div>
+            </div>
+            <div class="setting-row">
+              <span class="s-lbl">Bluetooth</span>
+              <span class="s-val green">Connected</span>
+            </div>
+            <div class="setting-row">
+              <span class="s-lbl">Firmware</span>
+              <span class="s-val">v3.1.2</span>
+            </div>
+
+          </div>
+        </div><!-- /settings -->
+
+      </div><!-- /screen -->
+
+      <!-- Screen dim overlay -->
+      <div class="screen-dim" id="screen-dim"></div>
+    </div><!-- /screen-wrap -->
+  </div><!-- /bezel -->
+
+  <!-- Nav dots (7 pages) -->
+  <div class="nav-dots" id="nav-dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+</div><!-- /device -->
+
+<div class="info-bar">
+  <span>Tap</span> or <span>swipe</span> to navigate &nbsp;·&nbsp; Crown to scroll &nbsp;·&nbsp;
+  <span>OnePlus Watch 3</span> Obsidian Titanium
+</div>
+
+<!-- Generate tick marks -->
+<script>
+(function () {
+  const svg = document.getElementById('tick-svg');
+  const cx = 170, cy = 170, r = 160;
+  for (let i = 0; i < 60; i++) {
+    const a    = (i * 6 - 90) * Math.PI / 180;
+    const isH  = i % 5 === 0;
+    const len  = isH ? 14 : 7;
+    const sw   = isH ? 2.5 : 1;
+    const col  = isH ? (i === 0 ? '#ff4040' : '#c0c0c0') : '#363636';
+    const x1 = cx + r * Math.cos(a), y1 = cy + r * Math.sin(a);
+    const x2 = cx + (r - len) * Math.cos(a), y2 = cy + (r - len) * Math.sin(a);
+    const l  = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+    l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+    l.setAttribute('stroke', col);
+    l.setAttribute('stroke-width', sw);
+    l.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(l);
+  }
+})();
+</script>
+
+<script src="watch.js"></script>
+</body>
+</html>
