@@ -23,22 +23,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # gradle-wrapper.jar is excluded by default Android .gitignore (*.jar).
-      # Download it from the pinned Gradle release so ./gradlew can bootstrap.
-      - name: Download Gradle wrapper JAR
-        working-directory: android
-        run: |
-          mkdir -p gradle/wrapper
-          curl -fsSL -o gradle/wrapper/gradle-wrapper.jar \
-            "https://github.com/gradle/gradle/raw/v8.7.1/gradle/wrapper/gradle-wrapper.jar"
-
-      - name: Make gradlew executable
-        working-directory: android
-        run: chmod +x gradlew
+      # Installs Gradle 8.7 and puts `gradle` on PATH.
+      # Avoids committing gradle-wrapper.jar (binary excluded by default
+      # Android .gitignore) and avoids the fragile curl-download workaround
+      # that caused exit code 22 (HTTP 404 on the raw GitHub JAR URL).
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
       - name: Build debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
